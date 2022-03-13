@@ -87,7 +87,7 @@ class SecurityController extends AbstractController
             ->setFirstname($data->firstname)
             ->setLastname($data->lastname)
             ->setFkPays($fk_pays)
-            ->setRoles(['ROLE_VISITEUR']);
+            ->setRoles(['ROLE_AUTHOR']);
 
         $user->setPassword($encoder->encodePassword($user, $data->password));
 
