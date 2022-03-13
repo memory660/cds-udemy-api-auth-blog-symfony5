@@ -1,0 +1,33 @@
+security:
+    enable_authenticator_manager: true
+    encoders:
+        App\Entity\TUser: bcrypt
+    role_hierarchy:
+        ROLE_VISITEUR: ROLE_USER
+        ROLE_AUTHOR: [ROLE_VISITEUR]
+        ROLE_ADMIN: [ROLE_VISITEUR, ROLE_AUTHOR]
+        ROLE_ROOT: [ROLE_ADMIN]
+    providers:
+        users_in_memory: { memory: null }
+        users_provider:
+            entity: { class: App\Entity\TUser, property: username }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        api_blog:
+            pattern: ^/api/v1/secure
+            stateless: true
+            anonymous: false
+            provider: users_provider
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+        main:
+            lazy: true
+            provider: users_in_memory
+
+    access_control:
+         - { path: ^/api/v1, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v1/secure, roles: ROLE_VISITEUR }
+#         - { path: ^/profile, roles: ROLE_USER }
